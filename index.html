@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f7f6f2" />
+    <meta name="theme-color" content="#101012" />
     <meta
       name="description"
       content="Organiza tus rutinas diarias y celebra cada pequeño avance con Cada Día."
@@ -19,61 +19,37 @@
   </head>
   <body>
     <div class="app-shell">
-      <aside class="sidebar">
-        <a class="brand" href="#" aria-label="Cada Día, inicio">
-          <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" fill="none">
-              <path d="M7 17.2 13.2 23 25 10" stroke="currentColor" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" />
-              <circle cx="16" cy="16" r="13.5" stroke="currentColor" stroke-width="1.5" opacity=".32" />
-            </svg>
-          </span>
-          <span class="brand-name">cada<span>día</span></span>
-        </a>
-
-        <div class="sidebar-label">TU ESPACIO</div>
-        <nav class="main-nav" aria-label="Navegación principal">
-          <a class="nav-link active" href="#hoy">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M8 2.8v3.4M16 2.8v3.4M3.8 9.3h16.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            <span>Mi día</span>
-          </a>
-          <a class="nav-link" href="#semana">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M7.5 8h2M14.5 8h2M7.5 12h2M14.5 12h2M7.5 16h2M14.5 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <span>Progreso</span>
-          </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-          <div class="sidebar-note">
-            <span class="note-sparkle" aria-hidden="true">✳</span>
-            <p>Los pequeños pasos también te llevan lejos.</p>
-            <span>— No hace falta hacerlo todo, solo empezar.</span>
-          </div>
-          <div class="profile">
-            <div class="profile-avatar">T</div>
-            <div class="profile-copy"><strong>Tu espacio</strong><span>Un día a la vez</span></div>
-            <span class="profile-dot" aria-hidden="true"></span>
-          </div>
-        </div>
-      </aside>
-
       <main class="main-content" id="hoy">
-        <header class="topbar">
-          <div class="breadcrumb"><span>Mi espacio</span><span class="breadcrumb-slash">/</span><strong>Mi día</strong></div>
-          <div class="topbar-date"><span class="live-dot"></span><span id="topbar-date"></span></div>
-        </header>
-
         <div class="page-content">
-          <section class="welcome-row">
-            <div>
-              <p class="eyebrow" id="welcome-eyebrow">UN DÍA A LA VEZ</p>
-              <h1>Hola, <span class="heading-accent">qué bueno verte.</span></h1>
-              <p class="welcome-subtitle">Un poquito cada día se convierte en mucho.</p>
+          <header class="app-header">
+            <a class="wordmark" href="#">cada<span>día</span><small>UN DÍA A LA VEZ</small></a>
+            <div class="header-actions">
+              <button class="round-button" id="settings-button" aria-label="Abrir copias de seguridad y ajustes"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.8 3-2.9.8L3 10l2 2-2 2 2.3 3.2 2.9.8L9 21h6l.8-3 2.9-.8L21 14l-2-2 2-2-2.3-3.2-2.9-.8L15 3Z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.4"/></svg></button>
+              <button class="round-button" id="summary-button" aria-label="Abrir registro diario y estadísticas"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20v-5m5 5V9m5 11v-7m5 7V6M3 10l6-6 5 4 7-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="round-button primary" id="open-add-modal" aria-label="Nuevo hábito">+</button>
             </div>
-            <button class="button button-primary add-top-button" id="open-add-modal">
-              <span class="plus-icon" aria-hidden="true">+</span> Nuevo hábito
-            </button>
+          </header>
+          <section aria-label="Filtrar hábitos" class="filters-section">
+            <div id="category-filters" class="category-filters" role="group" aria-label="Categorías"></div>
+            <button type="button" id="manage-categories-main" class="button category-manage">＋ Categorías</button><div class="filter-options"><label class="search-label"><span aria-hidden="true">⌕</span><input type="search" id="habit-search" placeholder="Buscar hábito" aria-label="Buscar hábito" /></label><label><input type="checkbox" id="show-archived" checked /> Incluir archivados</label></div>
           </section>
-
+          <section class="history-section" aria-label="Historial de hábitos">
+            <div class="history-toolbar">
+              <div class="period-control"><button class="round-button small" id="history-prev" aria-label="Periodo anterior">‹</button><label><span class="sr-only">Mes del historial</span><input type="month" id="history-month" min="1900-01" max="2100-12" /></label><button class="round-button small" id="history-next" aria-label="Periodo siguiente">›</button></div>
+              <button class="button" id="history-today">Hoy</button>
+            </div>
+            <div class="history-caption"><h1 id="history-title">Tu constancia, a la vista.</h1><span id="history-range"></span></div>
+            <p class="history-help">Cada casilla cuenta un día. Pulsa para marcar o desmarcar.</p>
+            <div id="history-content"></div>
+            <p id="history-empty" class="empty-state" hidden>No hay hábitos con estos filtros. Prueba otra categoría o crea uno nuevo.</p>
+            <div class="history-legend"><span><i class="legend-square"></i>Pendiente</span><span><i class="legend-square filled"></i>Completado</span><span>· Sin programar</span></div>
+          </section>
+          <nav class="view-switcher" aria-label="Vista del historial">
+            <button type="button" data-view="cards" aria-label="Vista tarjetas" aria-pressed="true"><span aria-hidden="true">▦</span><small>Tarjetas</small></button>
+            <button type="button" data-view="table" aria-label="Vista por días" aria-pressed="false"><span aria-hidden="true">☷</span><small>Días</small></button>
+            <button type="button" data-view="month" aria-label="Vista mensual" aria-pressed="false"><span aria-hidden="true">▤</span><small>Mes</small></button>
+          </nav>
+          <details id="daily-details" class="utility-panel"><summary>Registro diario y estadísticas <span id="topbar-date"></span></summary>
           <section class="overview-grid" aria-label="Resumen de hoy">
             <article class="card progress-card">
               <div class="card-heading">
@@ -131,12 +107,12 @@
             </div>
             <div class="closing-note" id="closing-note"><span class="closing-sun" aria-hidden="true">☼</span><span>La constancia no es perfección, es volver a intentarlo.</span></div>
           </section>
-          <details><summary>Hábitos archivados</summary><div id="archived-list"></div></details><section class="data-tools" aria-label="Copias de seguridad">
+          </details><details class="utility-panel"><summary>Hábitos archivados</summary><div id="archived-list"></div></details><details id="settings-details" class="utility-panel"><summary>Copias de seguridad y ajustes</summary><section class="data-tools" aria-label="Copias de seguridad">
             <button type="button" class="button button-secondary" id="export-button">Exportar datos</button>
             <label class="button button-secondary" for="import-file">Importar copia</label>
             <input id="import-file" type="file" accept="application/json,.json" />
             <p id="storage-status" role="status">Tus datos se guardan solo en este navegador. Exporta una copia periódicamente.</p>
-          </section><footer class="page-footer"><span>Hecho para crecer, a tu ritmo.</span><span>UN DÍA A LA VEZ <span class="footer-heart" aria-hidden="true">♥</span></span></footer>
+          </section></details><footer class="page-footer"><span>Hecho para crecer, a tu ritmo.</span><span>UN DÍA A LA VEZ <span class="footer-heart" aria-hidden="true">♥</span></span></footer>
         </div>
       </main>
     </div>
@@ -149,8 +125,10 @@
         </div>
         <label class="form-label" for="habit-name">¿Qué te gustaría hacer?</label>
         <input id="habit-name" name="name" class="text-input" type="text" maxlength="48" placeholder="Ej. Leer 10 minutos" required autocomplete="off" />
-        <span class="form-hint">Algo pequeño que puedas repetir cada día.</span>
-        <fieldset><legend>¿Qué días quieres repetirlo?</legend><label><input type="checkbox" name="weekday" value="0" checked />Dom</label> <label><input type="checkbox" name="weekday" value="1" checked />Lun</label> <label><input type="checkbox" name="weekday" value="2" checked />Mar</label> <label><input type="checkbox" name="weekday" value="3" checked />Mié</label> <label><input type="checkbox" name="weekday" value="4" checked />Jue</label> <label><input type="checkbox" name="weekday" value="5" checked />Vie</label> <label><input type="checkbox" name="weekday" value="6" checked />Sáb</label> <p>La frecuencia se mantiene al editar para conservar el historial.</p></fieldset><label class="form-label icon-label">Elige un símbolo</label>
+        <label class="form-label" for="habit-description">Descripción</label><input id="habit-description" class="text-input" maxlength="160" placeholder="Ej. Leer al menos 15 minutos" />
+        <div class="form-columns"><div><label class="form-label" for="habit-category">Categoría</label><select id="habit-category" class="text-input"><option value="">Sin categoría</option></select><button type="button" class="button category-manage" id="manage-categories">Crear o editar categorías</button></div>
+        <div><label class="form-label" for="habit-color">Color</label><select id="habit-color" class="text-input"><option value="blue">Azul</option><option value="purple">Violeta</option><option value="gold">Ámbar</option><option value="green">Verde</option><option value="pink">Rosa</option><option value="gray">Gris</option></select></div></div>
+        <fieldset><legend>¿Qué días quieres repetirlo?</legend><label><input type="checkbox" name="weekday" value="0" checked />Dom</label> <label><input type="checkbox" name="weekday" value="1" checked />Lun</label> <label><input type="checkbox" name="weekday" value="2" checked />Mar</label> <label><input type="checkbox" name="weekday" value="3" checked />Mié</label> <label><input type="checkbox" name="weekday" value="4" checked />Jue</label> <label><input type="checkbox" name="weekday" value="5" checked />Vie</label> <label><input type="checkbox" name="weekday" value="6" checked />Sáb</label> <p>Al editar, los nuevos días se aplican desde mañana. Hoy y las fechas anteriores conservan su calendario e historial.</p></fieldset><label class="form-label icon-label">Elige un símbolo</label>
         <div class="icon-picker" role="group" aria-label="Símbolo para el hábito">
           <button type="button" class="icon-choice selected" data-icon="☀" aria-label="Sol">☀</button>
           <button type="button" class="icon-choice" data-icon="◉" aria-label="Agua">◉</button>
@@ -164,6 +142,17 @@
       </form>
     </dialog>
 
+    <dialog id="category-dialog" class="habit-dialog" aria-labelledby="category-title">
+      <form id="category-form">
+        <div class="modal-top"><h2 id="category-title">Tus categorías</h2><button type="button" id="close-category" class="icon-button" aria-label="Cerrar categorías">×</button></div>
+        <label class="form-label" for="category-edit">Crear o editar</label><select id="category-edit" class="text-input"><option value="">Nueva categoría</option></select>
+        <label class="form-label" for="category-name">Nombre</label><input id="category-name" class="text-input" maxlength="32" required placeholder="Ej. Creatividad" />
+        <label class="form-label" for="category-symbol">Símbolo o emoji</label><input id="category-symbol" class="text-input" required maxlength="16" value="✳" placeholder="Ej. 🎨" />
+        <p class="form-hint">Puedes usar un símbolo o emoji de hasta 8 caracteres. Los cambios de símbolo se aplican a todos los hábitos de esa categoría.</p>
+        <p id="category-error" class="form-error" role="alert" hidden></p>
+        <div class="modal-actions"><button type="submit" class="button button-primary">Guardar categoría</button></div>
+      </form>
+    </dialog>
     <script src="habits-core.js"></script>
     <script src="app.js"></script>
   </body>
