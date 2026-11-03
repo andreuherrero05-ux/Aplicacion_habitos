@@ -108,7 +108,7 @@
           <section class="week-section" id="semana">
             <div class="section-heading">
               <div><p class="card-kicker">TU SEMANA, A TU MANERA</p><h2>Un paso cada día</h2></div>
-              <div class="week-controls">
+              <div class="week-controls"><button type="button" class="button button-secondary" id="today-button">Volver a hoy</button>
                 <button class="icon-button" id="previous-week" aria-label="Semana anterior"><svg viewBox="0 0 20 20" fill="none"><path d="m12.5 4.5-5 5.5 5 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 <span id="week-label"></span>
                 <button class="icon-button" id="next-week" aria-label="Semana siguiente"><svg viewBox="0 0 20 20" fill="none"><path d="m7.5 4.5 5 5.5-5 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -131,7 +131,12 @@
             </div>
             <div class="closing-note" id="closing-note"><span class="closing-sun" aria-hidden="true">☼</span><span>La constancia no es perfección, es volver a intentarlo.</span></div>
           </section>
-          <footer class="page-footer"><span>Hecho para crecer, a tu ritmo.</span><span>UN DÍA A LA VEZ <span class="footer-heart" aria-hidden="true">♥</span></span></footer>
+          <details><summary>Hábitos archivados</summary><div id="archived-list"></div></details><section class="data-tools" aria-label="Copias de seguridad">
+            <button type="button" class="button button-secondary" id="export-button">Exportar datos</button>
+            <label class="button button-secondary" for="import-file">Importar copia</label>
+            <input id="import-file" type="file" accept="application/json,.json" />
+            <p id="storage-status" role="status">Tus datos se guardan solo en este navegador. Exporta una copia periódicamente.</p>
+          </section><footer class="page-footer"><span>Hecho para crecer, a tu ritmo.</span><span>UN DÍA A LA VEZ <span class="footer-heart" aria-hidden="true">♥</span></span></footer>
         </div>
       </main>
     </div>
@@ -145,7 +150,7 @@
         <label class="form-label" for="habit-name">¿Qué te gustaría hacer?</label>
         <input id="habit-name" name="name" class="text-input" type="text" maxlength="48" placeholder="Ej. Leer 10 minutos" required autocomplete="off" />
         <span class="form-hint">Algo pequeño que puedas repetir cada día.</span>
-        <label class="form-label icon-label">Elige un símbolo</label>
+        <fieldset><legend>¿Qué días quieres repetirlo?</legend><label><input type="checkbox" name="weekday" value="0" checked />Dom</label> <label><input type="checkbox" name="weekday" value="1" checked />Lun</label> <label><input type="checkbox" name="weekday" value="2" checked />Mar</label> <label><input type="checkbox" name="weekday" value="3" checked />Mié</label> <label><input type="checkbox" name="weekday" value="4" checked />Jue</label> <label><input type="checkbox" name="weekday" value="5" checked />Vie</label> <label><input type="checkbox" name="weekday" value="6" checked />Sáb</label> <p>La frecuencia se mantiene al editar para conservar el historial.</p></fieldset><label class="form-label icon-label">Elige un símbolo</label>
         <div class="icon-picker" role="group" aria-label="Símbolo para el hábito">
           <button type="button" class="icon-choice selected" data-icon="☀" aria-label="Sol">☀</button>
           <button type="button" class="icon-choice" data-icon="◉" aria-label="Agua">◉</button>
@@ -155,10 +160,11 @@
           <button type="button" class="icon-choice" data-icon="✳" aria-label="Otro">✳</button>
         </div>
         <p class="form-error" id="form-error" role="alert" hidden></p>
-        <div class="modal-actions"><button type="button" class="button button-quiet" id="cancel-modal">Ahora no</button><button type="submit" class="button button-primary">Añadir hábito <span aria-hidden="true">→</span></button></div>
+        <div class="modal-actions"><button type="button" class="button button-quiet" id="cancel-modal">Ahora no</button><button type="submit" class="button button-primary">Guardar hábito <span aria-hidden="true">→</span></button></div>
       </form>
     </dialog>
 
+    <script src="habits-core.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

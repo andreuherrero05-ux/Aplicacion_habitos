@@ -234,3 +234,20 @@ h1 { margin-bottom: 8px; color: #2a3932; font-size: clamp(24px, 3vw, 32px); font
   .closing-note { padding: 0 9px; font-size: 8px; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+
+[hidden] { display: none !important; }
+.delete-habit { opacity: 1; width: auto; min-width: 44px; min-height: 44px; font-size: 11px; color: #80524d; }
+.check-button, .icon-button, .icon-choice { min-width: 44px; min-height: 44px; }
+.check-button:disabled { opacity: .4; cursor: not-allowed; }
+.data-tools { margin-top: 24px; font-size: 13px; }
+.data-tools p { margin-top: 10px; }
+fieldset { margin: 16px 0; padding: 12px; border: 1px solid #ccd6cc; font-size: 13px; }
+fieldset label { display: inline-flex; align-items: center; min-height: 44px; }
+.habit-copy p, .daily-label, .welcome-subtitle, .progress-copy > p { color: #626e63; }
+@media (max-width: 540px) {
+  .habit-item { flex-wrap: wrap; }
+  .habit-copy { flex-basis: calc(100% - 60px); }
+  .week-controls { flex-wrap: wrap; justify-content: flex-end; }
+  .section-heading { flex-wrap: wrap; }
+  .data-tools input { max-width: 100%; }
+}
