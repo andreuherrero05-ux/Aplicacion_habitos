@@ -35,3 +35,27 @@ test('categorías y colores sobreviven a la exportación y las copias antiguas s
  assert.equal(custom.habits[0].category,'Trabajo');
  assert.deepEqual(normalize(JSON.parse(JSON.stringify(custom)),'2026-11-03'),custom);
 });
+test('cambiar días conserva hoy, el pasado y las rachas al migrar y recargar', () => {
+ const {withSchedule,daysFor}=require('../habits-core');
+ const original=habit('a','2026-11-01',{'2026-11-01':true,'2026-11-02':true,'2026-11-03':true});
+ const changed=withSchedule(original,[1,3,5],'2026-11-04');
+ assert.equal(scheduled(changed,date('2026-11-03')),true);
+ assert.equal(scheduled(changed,date('2026-11-05')),false);
+ assert.equal(streak([changed],date('2026-11-03')),3);
+ assert.deepEqual(daysFor(changed,date('2026-11-02')),[0,1,2,3,4,5,6]);
+ const reloaded=normalize({habits:[changed]},'2026-11-03').habits[0];
+ assert.deepEqual(reloaded.scheduleHistory,changed.scheduleHistory);
+ assert.deepEqual(reloaded.completions,original.completions);
+ const twice=withSchedule(reloaded,[2,4],'2026-11-04');
+ assert.equal(twice.scheduleHistory.length,2);
+ const later=withSchedule(twice,[0,6],'2026-11-10');
+ assert.deepEqual(daysFor(later,date('2026-11-05')),[2,4]);
+ assert.deepEqual(daysFor(later,date('2026-11-11')),[0,6]);
+});
+test('categorías sin hábitos y símbolos se conservan en las copias',()=>{
+ const data={habits:[],categories:[{name:'Arte',icon:'🎨'}]};
+ const result=normalize(data);
+ assert.deepEqual(result.categories,data.categories);
+ assert.deepEqual(normalize(JSON.parse(JSON.stringify(result))),result);
+ assert.throws(()=>normalize({habits:[],categories:[{name:'Arte',icon:''}]}));
+});

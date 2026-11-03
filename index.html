@@ -31,7 +31,7 @@
           </header>
           <section aria-label="Filtrar hábitos" class="filters-section">
             <div id="category-filters" class="category-filters" role="group" aria-label="Categorías"></div>
-            <div class="filter-options"><label class="search-label"><span aria-hidden="true">⌕</span><input type="search" id="habit-search" placeholder="Buscar hábito" aria-label="Buscar hábito" /></label><label><input type="checkbox" id="show-archived" checked /> Incluir archivados</label></div>
+            <button type="button" id="manage-categories-main" class="button category-manage">＋ Categorías</button><div class="filter-options"><label class="search-label"><span aria-hidden="true">⌕</span><input type="search" id="habit-search" placeholder="Buscar hábito" aria-label="Buscar hábito" /></label><label><input type="checkbox" id="show-archived" checked /> Incluir archivados</label></div>
           </section>
           <section class="history-section" aria-label="Historial de hábitos">
             <div class="history-toolbar">
@@ -126,9 +126,9 @@
         <label class="form-label" for="habit-name">¿Qué te gustaría hacer?</label>
         <input id="habit-name" name="name" class="text-input" type="text" maxlength="48" placeholder="Ej. Leer 10 minutos" required autocomplete="off" />
         <label class="form-label" for="habit-description">Descripción</label><input id="habit-description" class="text-input" maxlength="160" placeholder="Ej. Leer al menos 15 minutos" />
-        <div class="form-columns"><div><label class="form-label" for="habit-category">Categoría</label><input id="habit-category" class="text-input" list="category-options" maxlength="32" placeholder="Sin categoría" /><datalist id="category-options"><option value="Fitness"></option><option value="Estudio"></option><option value="Finanzas"></option><option value="Bienestar"></option></datalist></div>
+        <div class="form-columns"><div><label class="form-label" for="habit-category">Categoría</label><select id="habit-category" class="text-input"><option value="">Sin categoría</option></select><button type="button" class="button category-manage" id="manage-categories">Crear o editar categorías</button></div>
         <div><label class="form-label" for="habit-color">Color</label><select id="habit-color" class="text-input"><option value="blue">Azul</option><option value="purple">Violeta</option><option value="gold">Ámbar</option><option value="green">Verde</option><option value="pink">Rosa</option><option value="gray">Gris</option></select></div></div>
-        <fieldset><legend>¿Qué días quieres repetirlo?</legend><label><input type="checkbox" name="weekday" value="0" checked />Dom</label> <label><input type="checkbox" name="weekday" value="1" checked />Lun</label> <label><input type="checkbox" name="weekday" value="2" checked />Mar</label> <label><input type="checkbox" name="weekday" value="3" checked />Mié</label> <label><input type="checkbox" name="weekday" value="4" checked />Jue</label> <label><input type="checkbox" name="weekday" value="5" checked />Vie</label> <label><input type="checkbox" name="weekday" value="6" checked />Sáb</label> <p>La frecuencia se mantiene al editar para conservar el historial.</p></fieldset><label class="form-label icon-label">Elige un símbolo</label>
+        <fieldset><legend>¿Qué días quieres repetirlo?</legend><label><input type="checkbox" name="weekday" value="0" checked />Dom</label> <label><input type="checkbox" name="weekday" value="1" checked />Lun</label> <label><input type="checkbox" name="weekday" value="2" checked />Mar</label> <label><input type="checkbox" name="weekday" value="3" checked />Mié</label> <label><input type="checkbox" name="weekday" value="4" checked />Jue</label> <label><input type="checkbox" name="weekday" value="5" checked />Vie</label> <label><input type="checkbox" name="weekday" value="6" checked />Sáb</label> <p>Al editar, los nuevos días se aplican desde mañana. Hoy y las fechas anteriores conservan su calendario e historial.</p></fieldset><label class="form-label icon-label">Elige un símbolo</label>
         <div class="icon-picker" role="group" aria-label="Símbolo para el hábito">
           <button type="button" class="icon-choice selected" data-icon="☀" aria-label="Sol">☀</button>
           <button type="button" class="icon-choice" data-icon="◉" aria-label="Agua">◉</button>
@@ -142,6 +142,17 @@
       </form>
     </dialog>
 
+    <dialog id="category-dialog" class="habit-dialog" aria-labelledby="category-title">
+      <form id="category-form">
+        <div class="modal-top"><h2 id="category-title">Tus categorías</h2><button type="button" id="close-category" class="icon-button" aria-label="Cerrar categorías">×</button></div>
+        <label class="form-label" for="category-edit">Crear o editar</label><select id="category-edit" class="text-input"><option value="">Nueva categoría</option></select>
+        <label class="form-label" for="category-name">Nombre</label><input id="category-name" class="text-input" maxlength="32" required placeholder="Ej. Creatividad" />
+        <label class="form-label" for="category-symbol">Símbolo o emoji</label><input id="category-symbol" class="text-input" required maxlength="16" value="✳" placeholder="Ej. 🎨" />
+        <p class="form-hint">Puedes usar un símbolo o emoji de hasta 8 caracteres. Los cambios de símbolo se aplican a todos los hábitos de esa categoría.</p>
+        <p id="category-error" class="form-error" role="alert" hidden></p>
+        <div class="modal-actions"><button type="submit" class="button button-primary">Guardar categoría</button></div>
+      </form>
+    </dialog>
     <script src="habits-core.js"></script>
     <script src="app.js"></script>
   </body>

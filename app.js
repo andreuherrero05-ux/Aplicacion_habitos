@@ -233,7 +233,7 @@ function renderProgress() {
   const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
   elements.progressPercent.textContent = `${percentage}%`;
   elements.progressCount.innerHTML = `${completed} <span>/ ${total} ${total === 1 ? "hábito" : "hábitos"}</span>`;
-  elements.progressRing.style.background = `conic-gradient(#66856c 0deg, #66856c ${percentage * 3.6}deg, #edf0e9 ${percentage * 3.6}deg, #edf0e9 360deg)`;
+  elements.progressRing.style.background = `conic-gradient(var(--accent) 0deg, var(--accent) ${percentage * 3.6}deg, var(--progress-track) ${percentage * 3.6}deg, var(--progress-track) 360deg)`;
   elements.progressRing.setAttribute("aria-label", `${percentage} % de hábitos completados`);
   elements.progressMeter.style.width = `${percentage}%`;
 
@@ -301,10 +301,11 @@ function openDialog(habit = null) {
   selectedIcon = habit?.icon || "☀";
   elements.habitName.value = habit?.name || "";
   $('#habit-description').value = habit?.reminder || '';
+  renderCategorySelect();
   $('#habit-category').value = habit?.category || '';
   $('#habit-color').value = habit?.color || 'purple';
   document.querySelector("#modal-title").textContent = habit ? "Editar hábito" : "Añade un hábito";
-  document.querySelectorAll("[name=weekday]").forEach(input => { input.checked = habit ? habit.days.includes(Number(input.value)) : true; input.disabled = Boolean(habit); });
+  document.querySelectorAll("[name=weekday]").forEach(input => { input.checked = habit ? HabitsCore.daysFor(habit, shiftDate(new Date(), 1)).includes(Number(input.value)) : true; input.disabled = false; });
   elements.formError.hidden = true;
   document.querySelectorAll(".icon-choice").forEach((choice) => (choice.classList.toggle("selected", choice.dataset.icon === selectedIcon), choice.setAttribute("aria-pressed", String(choice.dataset.icon === selectedIcon))));
   elements.dialog.showModal();
@@ -351,12 +352,16 @@ elements.form.addEventListener("submit", (event) => {
   if (editingId) {
     const habit = state.habits.find(h => h.id === editingId);
     const previous = {...habit};
+    const effectiveDate = localDateKey(shiftDate(new Date(), 1));
+    const previousDays = HabitsCore.daysFor(habit, parseDateKey(effectiveDate));
+    if (days.length !== previousDays.length || days.some(day => !previousDays.includes(day))) Object.assign(habit, HabitsCore.withSchedule(habit, days, effectiveDate));
     Object.assign(habit, {name, icon:selectedIcon, category, color, reminder});
     if (saveState()) { closeDialog(); render(); } else Object.assign(habit, previous);
     return;
   }
   const habit = {
     createdOn: localDateKey(new Date()), archivedOn: null, days,
+    scheduleHistory: [{from:localDateKey(new Date()), days:[...days]}],
     id: typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
     name,
     icon: selectedIcon,
@@ -426,18 +431,17 @@ function historyHabits() {
 }
 
 function renderCategories() {
-  const categories = [...new Set(['Fitness', 'Estudio', 'Finanzas', ...state.habits.map(h => h.category).filter(Boolean)])];
+  const categories = (state.categories || []).map(category => category.name);
   if (activeCategory !== null && activeCategory !== '' && !categories.includes(activeCategory)) activeCategory = null;
   const container = $('#category-filters');
   container.replaceChildren();
   for (const category of [null, ...categories, '']) {
-    const button = node('button', 'category-chip', category === null ? '☷  Todos' : category || 'Sin categoría');
-    button.type = 'button'; button.setAttribute('aria-pressed', String(category === activeCategory));
+    const button = node('button', 'category-chip', category === null ? '☷  Todos' : category ? `${categoryIcon(category)} ${category}` : 'Sin categoría');
+    button.type = 'button'; button.setAttribute('aria-label', category === null ? '☷  Todos' : category || 'Sin categoría'); button.setAttribute('aria-pressed', String(category === activeCategory));
     button.addEventListener('click', () => { activeCategory = category; renderHistory(); });
     container.append(button);
   }
-  const options = $('#category-options'); options.replaceChildren();
-  for (const category of categories) { const option = node('option'); option.value = category; options.append(option); }
+
 }
 
 function historyCell(habit, date, compact = false) {
@@ -513,7 +517,7 @@ function renderHistory() {
       const card = node('article', `history-card color-${habit.color}`); card.dataset.habit = habit.id;
       card.append(habitHistoryHeading(habit));
       const meta = node('div','habit-meta');
-      meta.append(node('span','category-label',habit.category || 'Sin categoría'),node('span','',`${habitStreak(habit)} días de racha${habit.archivedOn ? ' · Archivado' : ''}`)); card.append(meta);
+      meta.append(node('span','category-label',habit.category ? `${categoryIcon(habit.category)} ${habit.category}` : 'Sin categoría'),node('span','',`${habitStreak(habit)} días de racha${habit.archivedOn ? ' · Archivado' : ''}`)); card.append(meta);
       const scroller = node('div','heatmap-scroll');
       const grid = node('div',historyView === 'month' ? 'month-heatmap' : 'year-heatmap');
       grid.setAttribute('role','group'); grid.setAttribute('aria-label',`Historial de ${habit.name}`);
@@ -560,3 +564,47 @@ $('#history-today').addEventListener('click',()=>{historyDate=parseDateKey(local
 for (const [button, panel] of [['#settings-button','#settings-details'],['#summary-button','#daily-details']]) {
   $(button).addEventListener('click',()=>{ $(panel).open = true; $(panel).scrollIntoView({behavior:'smooth',block:'start'}); });
 }
+
+function categoryIcon(name) { return state.categories?.find(category=>category.name === name)?.icon || '✳'; }
+function renderCategorySelect() {
+  const select = $('#habit-category'), selected = select.value;
+  select.replaceChildren();
+  const empty = node('option','','Sin categoría'); empty.value=''; select.append(empty);
+  for (const category of state.categories || []) {
+    const option = node('option','',`${category.icon} ${category.name}`); option.value=category.name; select.append(option);
+  }
+  select.value = selected;
+}
+function openCategoryDialog() {
+  $('#category-form').reset(); $('#category-error').hidden=true;
+  const select = $('#category-edit'); select.replaceChildren();
+  const empty = node('option','','Nueva categoría'); empty.value=''; select.append(empty);
+  for (const category of state.categories || []) {
+    const option = node('option','',`${category.icon} ${category.name}`); option.value=category.name; select.append(option);
+  }
+  $('#category-name').disabled=false;
+  $('#category-dialog').showModal(); $('#category-name').focus();
+}
+$('#manage-categories').addEventListener('click',openCategoryDialog);
+$('#manage-categories-main').addEventListener('click',openCategoryDialog);
+$('#close-category').addEventListener('click',()=>$('#category-dialog').close());
+$('#category-edit').addEventListener('change',event=>{
+  const category=state.categories?.find(category=>category.name === event.target.value);
+  $('#category-name').value=category?.name || ''; $('#category-name').disabled=Boolean(category);
+  $('#category-symbol').value=category?.icon || '✳'; $('#category-error').hidden=true;
+});
+$('#category-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  const name=$('#category-name').value.trim(), icon=$('#category-symbol').value.trim(), editing=$('#category-edit').value;
+  const categories=state.categories || [];
+  if (!name || !icon || [...icon].length>8 || (!editing && categories.some(category=>category.name.toLocaleLowerCase('es')===name.toLocaleLowerCase('es')))) {
+    $('#category-error').textContent='Escribe un nombre único y un símbolo de hasta 8 caracteres.'; $('#category-error').hidden=false; return;
+  }
+  const previous=state.categories;
+  state.categories=editing ? categories.map(category=>category.name === editing ? {name,icon} : category) : [...categories,{name,icon}];
+  if (saveState()) {
+    renderCategorySelect();
+    if (elements.dialog.open) $('#habit-category').value=name;
+    $('#category-dialog').close(); render();
+  } else state.categories=previous;
+});

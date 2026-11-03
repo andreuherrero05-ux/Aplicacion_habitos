@@ -1147,3 +1147,8 @@ fieldset legend {
   letter-spacing:.5px;
   color:var(--muted)
 }
+
+:root { --progress-track: #38333f; }
+.category-manage { margin-top: 8px; font-size: 12px; background: #25232d; border-color: #484051; }
+.form-hint { display: block; margin-top: 12px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+select.text-input { appearance: auto; width: 100%; }
