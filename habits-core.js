@@ -14,7 +14,7 @@
       const days = h.days === undefined ? [0,1,2,3,4,5,6] : h.days;
       if (!Array.isArray(days) || !days.length || days.some(d => !Number.isInteger(d) || d < 0 || d > 6)) throw new Error('Frecuencia inválida.');
       if (h.archivedOn != null && (!validDate(h.archivedOn) || h.archivedOn < createdOn)) throw new Error('Fecha de archivo inválida.');
-      return {...h, name:h.name.trim(), icon:typeof h.icon === 'string' ? h.icon : '✳', tone:typeof h.tone === 'string' ? h.tone : '', reminder:typeof h.reminder === 'string' ? h.reminder : 'Un pequeño paso para ti', completions, createdOn, archivedOn:h.archivedOn || null, days:[...new Set(days)]};
+      return {...h, category:typeof h.category === 'string' ? h.category.trim().slice(0,32) : '', color:['blue','purple','gold','green','pink','gray'].includes(h.color) ? h.color : 'purple', name:h.name.trim(), icon:typeof h.icon === 'string' ? h.icon : '✳', tone:typeof h.tone === 'string' ? h.tone : '', reminder:typeof h.reminder === 'string' ? h.reminder : 'Un pequeño paso para ti', completions, createdOn, archivedOn:h.archivedOn || null, days:[...new Set(days)]};
     })};
   }
   const scheduled = (h,date) => key(date) >= h.createdOn && (!h.archivedOn || key(date) < h.archivedOn) && h.days.includes(date.getDay());

@@ -27,3 +27,11 @@ test('migración conserva registros antiguos y descarta fechas imposibles o futu
 test('rechaza copias inválidas y duplicados', () => {
  for(const data of [null,{}, {habits:[{id:'a',name:'a',days:[]}]}, {habits:[{id:'a',name:'a'},{id:'a',name:'b'}]}]) assert.throws(()=>normalize(data));
 });
+test('categorías y colores sobreviven a la exportación y las copias antiguas siguen funcionando', () => {
+ const old = normalize({habits:[{id:'old',name:'Antiguo',completions:{'2026-11-01':true}}]},'2026-11-03');
+ assert.equal(old.habits[0].category,''); assert.equal(old.habits[0].color,'purple');
+ assert.equal(old.habits[0].completions['2026-11-01'],true);
+ const custom = normalize({habits:[{id:'new',name:'Nuevo',category:' Trabajo ',color:'blue',completions:{}}]},'2026-11-03');
+ assert.equal(custom.habits[0].category,'Trabajo');
+ assert.deepEqual(normalize(JSON.parse(JSON.stringify(custom)),'2026-11-03'),custom);
+});

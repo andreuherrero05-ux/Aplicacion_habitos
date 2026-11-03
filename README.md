@@ -37,3 +37,15 @@ node tests/browser.cjs
 ```
 
 Puedes indicar `BASE_URL` y `CHROMIUM_PATH` para otro puerto o ejecutable. Las pruebas usan un contexto de navegador aislado y no modifican tus datos personales.
+
+## Historial y categorías
+
+La pantalla principal ofrece tres vistas: tarjetas con un mapa anual desplazable, tabla de cinco días y calendario mensual. Las flechas recorren años, bloques de cinco días o meses según la vista. El selector de mes permite saltar directamente a un periodo y Hoy vuelve a la fecha actual. Cada casilla informa de su fecha y estado; las fechas futuras y los días sin programar están bloqueados.
+
+Puedes crear categorías escribiendo su nombre al crear o editar un hábito, elegir entre seis colores y personalizar la descripción. Los filtros por categoría, búsqueda e inclusión de archivados se combinan y afectan al historial. El registro diario y las estadísticas conservan el resumen global y están en su propio panel. La categoría y el color también se conservan en las copias JSON; los datos anteriores se migran sin perder el historial.
+
+Pruebas de las nuevas vistas (mismos requisitos que la prueba funcional anterior):
+
+```sh
+node tests/history-browser.cjs
+```
